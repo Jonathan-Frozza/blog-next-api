@@ -1,0 +1,12 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  background: #f7fafc;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
