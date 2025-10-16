@@ -1,8 +1,9 @@
-// app/artigos/page.tsx
 import Link from "next/link";
 import slugify from "slugify";
 
-const API_URL = "https://crudcrud.com/api/d91c70121d09436bbb36c932e345cbaf/artigos";
+export const dynamic = "force-dynamic"; 
+
+const API_URL = "https://crudcrud.com/api/2037830226bd40c9ba9ebaba8b648093/artigos";
 
 export default async function ListaArtigos() {
   const res = await fetch(API_URL, { cache: "no-store" });
@@ -10,7 +11,7 @@ export default async function ListaArtigos() {
 
   return (
     <main style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>Artigos</h1>
+      <h1> Lista de Artigos</h1>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {artigos.map((a: any) => (
           <li key={a._id} style={{ margin: "1rem 0" }}>

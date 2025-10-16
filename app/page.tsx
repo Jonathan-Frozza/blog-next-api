@@ -1,6 +1,6 @@
 import { ArtigoCard } from '../components/ArtigoCard';
 
-const API_URL = 'https://crudcrud.com/api/d91c70121d09436bbb36c932e345cbaf/artigos';
+const API_URL = 'https://crudcrud.com/api/2037830226bd40c9ba9ebaba8b648093/artigos';
 
 async function fetchArtigos() {
   const res = await fetch(API_URL, { cache: 'no-store' });
