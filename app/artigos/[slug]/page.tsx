@@ -1,10 +1,25 @@
 import slugify from "slugify";
 
-// 🔹 Declara SSR (renderização dinâmica no servidor)
-export const dynamic = "force-dynamic";
+// 🔹 Força renderização estática (SSG)
+export const dynamic = "force-static";
+export const revalidate = 60;
 
 const API_URL =
-  "https://crudcrud.com/api/1329b0b672c74a55bd294ffb027eeb71/artigos";
+  "https://crudcrud.com/api/9d2dfbad42844aa08600612c30905dbe/artigos";
+
+export async function generateStaticParams() {
+  const res = await fetch(
+    "https://crudcrud.com/api/9d2dfbad42844aa08600612c30905dbe/artigos",
+    { cache: "no-store" }
+  );
+
+  const artigos = res.ok ? await res.json() : [];
+
+  return artigos.map((a: any) => ({
+    slug: slugify(a.titulo, { lower: true }),
+  }));
+}
+
 
 type Artigo = {
   _id: string;
@@ -15,20 +30,21 @@ type Artigo = {
   conteudo?: string;
 };
 
-// 🔹 Busca os artigos da API
 async function fetchArtigos(): Promise<Artigo[]> {
-  const res = await fetch(API_URL, { cache: "no-store" });
+  const res = await fetch(API_URL, { next: { revalidate: 60 } });
   if (!res.ok) return [];
   return res.json();
 }
 
-// 🔹 SEO dinâmico
+
+
+// ✅ Corrige o erro do params.await
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // ✅ agora aguardamos params
+  const { slug } = await params; // ✅ aguarda o params antes de acessar slug
 
   const artigos = await fetchArtigos();
   const artigo = artigos.find(
@@ -43,15 +59,15 @@ export async function generateMetadata({
   };
 }
 
-// 🔹 Página individual do artigo
+// ✅ Mesmo ajuste no componente da página
 export default async function ArtigoPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // ✅ e aqui também
-
+  const { slug } = await params; // ✅ aguarda antes de usar
   const artigos = await fetchArtigos();
+
   const artigo = artigos.find(
     (a) => slugify(a.titulo, { lower: true }) === slug
   );
