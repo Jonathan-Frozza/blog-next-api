@@ -1,0 +1,61 @@
+name: CI/CD - Next.js App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    name: 🧪 Build, Lint & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Clona o repositório
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2️⃣ Instala Node.js
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3️⃣ Instala dependências
+      - name: Instala dependências
+        run: npm ci
+
+      # 4️⃣ Rodar ESLint
+      - name: 🧹 Lint do código
+        run: npm run lint
+
+      # 5️⃣ Rodar testes (caso existam)
+      - name: 🧪 Testes automatizados
+        run: npm run test --if-present
+
+      # 6️⃣ Build do projeto
+      - name: 🏗️ Build da aplicação
+        run: npm run build
+
+  deploy:
+    name: 🚀 Deploy para Vercel
+    runs-on: ubuntu-latest
+    needs: build_and_test  # só roda se o build anterior passar
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instala dependências
+        run: npm ci
+
+      - name: Deploy para Vercel
+        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
