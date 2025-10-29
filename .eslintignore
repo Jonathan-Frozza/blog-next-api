@@ -1,4 +1,0 @@
-# Ignorar arquivos gerados automaticamente
-.next/
-node_modules/
-next-env.d.ts
